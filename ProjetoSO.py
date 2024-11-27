@@ -2,7 +2,6 @@
 # Amanda Reis
 # Eduardo Costa Araujo
 
-
 import threading
 import random
 import time
@@ -25,6 +24,8 @@ class PontoRedistribuicao(threading.Thread):
     def __init__(self, id):
         super().__init__()
         self.id = id
+
+
         self.fila = Queue()  # Usando Queue para gestão da fila
         self.lock = threading.Lock()
 
@@ -78,7 +79,7 @@ class Veiculo(threading.Thread):
         while encomendas_ativas.is_set() or any(p.fila.qsize() > 0 for p in self.pontos):
             self.descarregar_encomendas()
             self.carregar_encomendas()
-            
+
             # Move para o próximo ponto
             proximo_ponto_id = (self.ponto_atual.id + 1) % len(self.pontos)
             self.ponto_atual = self.pontos[proximo_ponto_id]
@@ -100,7 +101,7 @@ def monitoramento_real(pontos, veiculos):
     while encomendas_ativas.is_set():
         limpar_console()
         print("Monitoramento em tempo real")
-        print("=" * 50)
+        print("-" * 30)
         for ponto in pontos:
             print(f"Ponto {ponto.id} - Encomendas na fila: {ponto.fila.qsize()}")
         for veiculo in veiculos:
@@ -161,8 +162,7 @@ if __name__ == "__main__":
     # Inicializa o evento de execução das threads
     encomendas_ativas.set()
 
-    # Agora que todos os objetos estão criados e as threads foram iniciadas,
-    # iniciamos o monitoramento
+    # Agora que todos os objetos estão criados e as threads foram iniciadas,iniciamos o monitoramento
     monitoramento_thread = threading.Thread(target=monitoramento_real, args=(pontos, veiculos))
     monitoramento_thread.start()
 
@@ -178,3 +178,4 @@ if __name__ == "__main__":
         veiculo.join()
 
     print("Todas as encomendas foram entregues.")
+
